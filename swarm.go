@@ -169,8 +169,6 @@ loop:
 	// 聚合错误
 	var errs []error
 	for err := range errChan {
-		// 过滤掉 context.Canceled，除非你想把它作为错误抛出。
-		// 这里选择将 context 错误也合并返回，让调用者明确知道任务被中断了。
 		errs = append(errs, err)
 	}
 
