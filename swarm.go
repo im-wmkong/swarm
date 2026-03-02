@@ -47,10 +47,13 @@ func WithFailFast() Option {
 }
 
 // WithPanicHandler 自定义 Panic 捕获和处理逻辑。
-// 如果传入 nil 或不配置，默认会记录 panic 的值和堆栈信息并作为 error 返回。
+// 如果传入 nil，则忽略此选项，继续使用默认的处理逻辑（记录堆栈并返回 error）。
+// 如果想要完全吞噬或忽略 Panic 错误，请传入一个返回 nil 的函数：func(p any) error { return nil }
 func WithPanicHandler(handler func(p any) error) Option {
 	return func(o *Options) {
-		o.panicHandler = handler
+		if handler != nil {
+			o.panicHandler = handler
+		}
 	}
 }
 
