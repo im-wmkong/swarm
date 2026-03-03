@@ -3,9 +3,6 @@ package swarm
 import (
 	"context"
 	"errors"
-	"fmt"
-	"runtime"
-	"runtime/debug"
 	"sync"
 )
 
@@ -16,15 +13,7 @@ func Run[T any](data []T, handle func(item T) error, opts ...Option) error {
 	}
 
 	// 初始化默认配置
-	options := &Options{
-		concurrency: runtime.GOMAXPROCS(0), // 默认并发数为 CPU 核心数
-		ctx:         context.Background(),
-		failFast:    false,
-		retryTimes:  0,
-		panicHandler: func(p any) error {
-			return fmt.Errorf("panic recovered: %v\nstack: %s", p, debug.Stack())
-		},
-	}
+	options := defaultOptions()
 
 	// 应用用户传入的 Options
 	for _, opt := range opts {
